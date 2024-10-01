@@ -1,0 +1,44 @@
+services:
+  db:
+    hostname: ndbdb
+    image: pgvector/pgvector:pg17
+    ports:
+     - 5435:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testpwd
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes: 
+      - ./article_database/data:/var/lib/postgresql/data/
+      - ./article_database/logs:/var/log/postgresql/
+      - ./article_database/create_database.sql:/docker-entrypoint-initdb.d/init.sql
+  api:
+    build: ./article_api
+    ports:
+      - 8080:3000
+    volumes:
+      - ./article_api/:/usr/app/
+      - /usr/app/node_modules
+    environment:
+      - RDS_HOSTNAME=ndbdb
+      - RDS_PORT=5432
+      - RDS_DATABASE=postgres
+      - RDS_USERNAME=postgres
+      - RDS_PASSWORD=testpwd
+      - ORCIDAPP=${ORCIDAPP}
+      - ORCIDSECRET=${ORCIDSECRET}
+      - MAILTO=${MAILTO}
+    env_file:
+      - path: ".env"
+        required: true
+    depends_on:
+      - db
+secrets:
+  orcid_app:
+    environment: ORCIDAPP
+  orcid_secret:
+    environment: ORCIDSECRET
+  mail_to:
+    environment: MAILTO
