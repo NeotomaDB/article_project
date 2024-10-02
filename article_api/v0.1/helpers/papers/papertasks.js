@@ -16,7 +16,7 @@ function checkembedding(req, res, next) {
     db.oneOrNone('SELECT em.doi, emm.embeddingmodel, em.embeddings, em.date \
         FROM embeddings AS em \
         INNER JOIN embeddingmodels AS emm ON emm.embeddingmodelid = em.embeddingmodelid \
-        WHERE doi =ILIKE ${doi} AND embeddingmodel = ${model}', {'doi': doi, 'model': model})
+        WHERE doi = ${doi} AND embeddingmodel = ${model}', {'doi': doi, 'model': model})
       .then(function(data) {
         return res.status(200)
           .json({
