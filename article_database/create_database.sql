@@ -41,7 +41,7 @@ create table embeddings (
     embeddingmodelid INT REFERENCES embeddingmodels(embeddingmodelid),
     embeddings public.vector,
     date timestamp,
-    UNIQUE(doi, embeddingmodelid, embeddings)
+    UNIQUE(doi, embeddingmodelid)
 );
 
 create table people (
