@@ -11,7 +11,7 @@ const {ColumnSet, insert} = pgp.helpers;
 function registerproject(req, res, next) {
     const db = req.app.locals.db;
     const project = JSON.parse(req.body.data);
-    db.oneOrNone('INSERT INTO projects(projectname, projectnotes) \
+    db.oneOrNone('INSERT INTO projects(projectname, projectdescription) \
         VALUES (${project}, ${projectnotes}) \
         ON CONFLICT DO NOTHING;', {'project': project.project, 'notes': project.projectnotes})
       .then(function(data) {
@@ -33,7 +33,7 @@ function registerproject(req, res, next) {
 function checkproject(req, res, next) {
 const db = req.app.locals.db;
 const project = req.query.project;
-db.oneOrNone('SELECT pr.projectname, pr.projectnotes \
+db.oneOrNone('SELECT pr.projectname, pr.projectdescription \
     FROM projects AS pr \
     WHERE pr.projectname = ${project}', {'project': project})
     .then(function(data) {
